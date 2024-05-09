@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-// WAHASSSANNNNNNNNNNNN
+
 function Calendar() {
   const [eventInfo, setEventInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
@@ -19,7 +19,7 @@ function Calendar() {
   };
 
   const handleEventDrop = (arg) => {
-    // Update the event's start and end time when dropped on a
+    // Update the event's start and end time when dropped on a new cell
     const updatedEvent = {
       ...arg.event.toPlainObject(),
       start: arg.event.start,
@@ -36,13 +36,14 @@ function Calendar() {
   const handleSubmit = (formData) => {
     // Create a new event object with form data
     const newEvent = {
-      title: formData.name,
+      title: formData.userName,
+      roomType: formData.roomType,
+      comment: formData.comment,
       start: eventInfo.start,
       end: eventInfo.end,
       allDay: eventInfo.allDay,
+      participants: formData.participants,
       color: formData.color,
-      otherUsers: formData.otherUsers,
-      comment: formData.comment,
       id: generateEventId(), // Generate unique id for the event
     };
 
@@ -84,11 +85,13 @@ function Calendar() {
 // Form component for capturing event details
 function EventForm({ eventInfo, onSubmit }) {
   const [formData, setFormData] = useState({
-    name: "",
-    duration: "",
+    userName: "",
+    roomType: "",
     comment: "",
+    startDate: eventInfo.start,
+    endDate: eventInfo.end,
+    participants: "",
     color: "",
-    otherUsers: "",
   });
 
   const handleChange = (e) => {
@@ -106,14 +109,58 @@ function EventForm({ eventInfo, onSubmit }) {
     <div className="event-form">
       <h2>New Event</h2>
       <form onSubmit={handleSubmit}>
-        <label>Name:</label>
+        <label>User Name:</label>
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          name="userName"
+          value={formData.userName}
           onChange={handleChange}
         />
-        {/* Other form fields */}
+        <label>Room Type:</label>
+        <select
+          name="roomType"
+          value={formData.roomType}
+          onChange={handleChange}
+        >
+          <option value="">Select Room Type</option>
+          <option value="meeting">Meeting Room</option>
+          <option value="conference">Conference Room</option>
+          <option value="event">Event Space</option>
+        </select>
+        <label>Comment:</label>
+        <textarea
+          name="comment"
+          value={formData.comment}
+          onChange={handleChange}
+        ></textarea>
+        <label>Start Date:</label>
+        <input
+          type="date"
+          name="startDate"
+          value={formData.startDate}
+          onChange={handleChange}
+        />
+        <label>End Date:</label>
+        <input
+          type="date"
+          name="endDate"
+          value={formData.endDate}
+          onChange={handleChange}
+        />
+        <label>Participants:</label>
+        <input
+          type="text"
+          name="participants"
+          value={formData.participants}
+          onChange={handleChange}
+        />
+        <label>Color:</label>
+        <input
+          type="color"
+          name="color"
+          value={formData.color}
+          onChange={handleChange}
+        />
         <button type="submit">Submit</button>
       </form>
     </div>
