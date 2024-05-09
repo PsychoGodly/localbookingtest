@@ -59,6 +59,28 @@ function Calendar() {
     return Math.random().toString(36).substring(7);
   };
 
+  const eventRender = (info) => {
+    const event = info.event;
+    const userName = event.extendedProps.userName;
+    const comment = event.extendedProps.comment;
+    const participants = event.extendedProps.participants;
+
+    const startDate = event.start;
+    const endDate = event.end;
+
+    const daysDiff = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
+
+    info.el.innerHTML = `
+      <div>
+        <strong>${userName}</strong> - ${comment} <br>
+        for ${daysDiff} ${daysDiff > 1 ? "days" : "day"} <br>
+        ${participants ? "Participants: " + participants : ""}
+      </div>
+    `;
+  };
+
   return (
     <div>
       <FullCalendar
@@ -74,6 +96,7 @@ function Calendar() {
         eventDrop={handleEventDrop} // Handle event drop
         events={calendarEvents} // Pass the events array to the calendar
         editable={true} // Enable event dragging
+        eventRender={eventRender} // Customize event rendering
       />
       {eventInfo && (
         <EventForm eventInfo={eventInfo} onSubmit={handleSubmit} />
