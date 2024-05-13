@@ -38,7 +38,7 @@ function Calendar() {
     // Create a new event object with form data
     const newEvent = {
       title: formData.userName,
-      roomType: formData.roomType,
+      roomType: selectedRoom, // Assign the selected room to the event
       comment: formData.comment,
       start: eventInfo.start,
       end: eventInfo.end,
@@ -123,7 +123,6 @@ function Calendar() {
 function EventForm({ eventInfo, onSubmit }) {
   const [formData, setFormData] = useState({
     userName: "",
-    roomType: "",
     comment: "",
     startDate: eventInfo.start,
     endDate: eventInfo.end,
@@ -153,17 +152,6 @@ function EventForm({ eventInfo, onSubmit }) {
           value={formData.userName}
           onChange={handleChange}
         />
-        <label>Room Type:</label>
-        <select
-          name="roomType"
-          value={formData.roomType}
-          onChange={handleChange}
-        >
-          <option value="">Select Room Type</option>
-          <option value="meeting">Meeting Room</option>
-          <option value="conference">Conference Room</option>
-          <option value="event">Event Space</option>
-        </select>
         <label>Comment:</label>
         <textarea
           name="comment"
