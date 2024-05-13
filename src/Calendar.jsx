@@ -7,7 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 function Calendar() {
   const [eventInfo, setEventInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
-  const [selectedRoom, setSelectedRoom] = useState(""); // State to track selected room
+  const [selectedRoom, setSelectedRoom] = useState("All"); // Initialize selected room as "All"
 
   const handleDateClick = (arg) => {
     // Open a modal or a form to capture user input
@@ -38,7 +38,7 @@ function Calendar() {
     // Create a new event object with form data
     const newEvent = {
       title: formData.userName,
-      roomType: selectedRoom, // Assign the selected room to the event
+      roomType: selectedRoom === "All" ? "" : selectedRoom, // Assign the selected room, unless "All" is selected
       comment: formData.comment,
       start: eventInfo.start,
       end: eventInfo.end,
@@ -91,7 +91,7 @@ function Calendar() {
       <div>
         <label>Select Room:</label>
         <select value={selectedRoom} onChange={handleRoomSelect}>
-          <option value="">Select Room</option>
+          <option value="All">All Rooms</option> {/* Add the "All" option */}
           <option value="meeting">Meeting Room</option>
           <option value="conference">Conference Room</option>
           <option value="event">Event Space</option>
@@ -108,7 +108,11 @@ function Calendar() {
         height={"90vh"}
         dateClick={handleDateClick}
         eventDrop={handleEventDrop} // Handle event drop
-        events={calendarEvents.filter((event) => event.roomType === selectedRoom)} // Filter events based on selected room
+        events={
+          selectedRoom === "All"
+            ? calendarEvents // Show all events if "All" is selected
+            : calendarEvents.filter((event) => event.roomType === selectedRoom)
+        } // Filter events based on selected room
         editable={true} // Enable event dragging
         eventRender={eventRender} // Customize event rendering
       />
