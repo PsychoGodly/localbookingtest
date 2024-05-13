@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 function Calendar() {
   const [eventInfo, setEventInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState(""); // State to track selected room
 
   const handleDateClick = (arg) => {
     // Open a modal or a form to capture user input
@@ -81,8 +82,21 @@ function Calendar() {
     `;
   };
 
+  const handleRoomSelect = (e) => {
+    setSelectedRoom(e.target.value);
+  };
+
   return (
     <div>
+      <div>
+        <label>Select Room:</label>
+        <select value={selectedRoom} onChange={handleRoomSelect}>
+          <option value="">Select Room</option>
+          <option value="meeting">Meeting Room</option>
+          <option value="conference">Conference Room</option>
+          <option value="event">Event Space</option>
+        </select>
+      </div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView={"dayGridMonth"}
@@ -94,7 +108,7 @@ function Calendar() {
         height={"90vh"}
         dateClick={handleDateClick}
         eventDrop={handleEventDrop} // Handle event drop
-        events={calendarEvents} // Pass the events array to the calendar
+        events={calendarEvents.filter((event) => event.roomType === selectedRoom)} // Filter events based on selected room
         editable={true} // Enable event dragging
         eventRender={eventRender} // Customize event rendering
       />
